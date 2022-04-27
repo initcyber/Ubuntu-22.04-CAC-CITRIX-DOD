@@ -28,47 +28,57 @@ In your terminal type:
 pcsc_scan
 ```
 Running pcsc_scan should give the following output:
+```
+Scanning present readers...
+0: Virtual PCD 00 00
+1: Virtual PCD 00 01
+2: SCM Microsystems Inc. SCR 3310 [CCID Interface] (53312028233379) 00 00
+ 
+Wed Apr 27 06:43:26 2022
+ Reader 0: Virtual PCD 00 00
+  Event number: 0
+  Card state: Card removed, 
+ Reader 1: Virtual PCD 00 01
+  Event number: 0
+  Card state: Card removed, 
+ Reader 2: SCM Microsystems Inc. SCR 3310 [CCID Interface] (53312028233379) 00 00
+  Event number: 0
+  Card state: Card inserted, Shared Mode, 
+  ATR: 3B F9 18 00 00 00 53 43 45 37 20 03 00 20 46
 
->Using reader plug'n play mechanism
->Scanning present readers...
->0: Virtual PCD 00 00
->1: Virtual PCD 00 01
->2: SCM Microsystems Inc. SCR 3310 [CCID Interface] (53312028233379) 00 00
-> 
->Wed Apr 27 06:43:26 2022
-> Reader 0: Virtual PCD 00 00
->  Event number: 0
->  Card state: Card removed, 
-> Reader 1: Virtual PCD 00 01
->  Event number: 0
->  Card state: Card removed, 
-> Reader 2: SCM Microsystems Inc. SCR 3310 [CCID Interface] (53312028233379) 00 00
->  Event number: 0
->  Card state: Card inserted, Shared Mode, 
->  ATR: 3B F9 18 00 00 00 53 43 45 37 20 03 00 20 46
->
->ATR: 3B F9 18 00 00 00 53 43 45 37 20 03 00 20 46
->+ TS = 3B --> Direct Convention
->+ T0 = F9, Y(1): 1111, K: 9 (historical bytes)
->  TA(1) = 18 --> Fi=372, Di=12, 31 cycles/ETU
->    129032 bits/s at 4 MHz, fMax for Fi = 5 MHz => 161290 bits/s
->  TB(1) = 00 --> VPP is not electrically connected
->  TC(1) = 00 --> Extra guard time: 0
->  TD(1) = 00 --> Y(i+1) = 0000, Protocol T = 0 
-> -----
->+ Historical bytes: 53 43 45 37 20 03 00 20 46
->  Category indicator byte: 53 (proprietary format)
->
->Possibly identified card (using /usr/share/pcsc/smartcard_list.txt):
->3B F9 18 00 00 00 53 43 45 37 20 03 00 20 46
->	G+D FIPS 201 SCE 7.0 (PKI)
+ATR: 3B F9 18 00 00 00 53 43 45 37 20 03 00 20 46
++ TS = 3B --> Direct Convention
++ T0 = F9, Y(1): 1111, K: 9 (historical bytes)
+  TA(1) = 18 --> Fi=372, Di=12, 31 cycles/ETU
+    129032 bits/s at 4 MHz, fMax for Fi = 5 MHz => 161290 bits/s
+  TB(1) = 00 --> VPP is not electrically connected
+  TC(1) = 00 --> Extra guard time: 0
+  TD(1) = 00 --> Y(i+1) = 0000, Protocol T = 0 
+-----
++ Historical bytes: 53 43 45 37 20 03 00 20 46
+  Category indicator byte: 53 (proprietary format)
 
+Possibly identified card (using /usr/share/pcsc/smartcard_list.txt):
+3B F9 18 00 00 00 53 43 45 37 20 03 00 20 46
+	G+D FIPS 201 SCE 7.0 (PKI)
+```
 
 
 If you get 
->SCardEstablishContext: Service not available.
-
-
+```
+SCardEstablishContext: Service not available.
+```
+Check to see if pcsc is running by typing:
+```
 sudo systemctl status pcscd.s*       
+```
+If it isn't then restart the daemon:
+```
 sudo systemctl restart pcscd.socket && sudo systemctl restart pcscd.service
- 
+```
+
+Optionally, set it to start at time of system boot:
+```
+sudo systemctl enable pcscd.socket
+```
+
