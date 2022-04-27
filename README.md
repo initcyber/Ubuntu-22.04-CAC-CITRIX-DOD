@@ -206,9 +206,63 @@ Module filename: '/usr/lib/x86_64-linux-gnu/pkcs11/onepin-opensc-pkcs11.so` or `
 
 ### Load the DOD Certificates
 
+In Firefox (ESR)
+
+Navigate to your Taskbar (on top) -> Edit -> Settings
+Left column click on Privacy & Security 
+Scroll down to Certificates -> View Certificates. 
+Under "Authorities" -> Import.
+
+Import the following certificates (from the folder you downloaded the above certificate file to - Below is as of 5.7)
+
+1) Certificates_PKCS7_v5.7_DoD.der.p7b
+2) Certificates_PKCS7_v5.7_DoD_DoD_Root_CA_2.der.p7b
+3) Certificates_PKCS7_v5.7_DoD_DoD_Root_CA_3.der.p7b
+4) Certificates_PKCS7_v5.7_DoD_DoD_Root_CA_4.der.p7b
+5) Certificates_PKCS7_v5.7_DoD_DoD_Root_CA_5.der.p7b
+6) Certificates_PKCS7_v5.7_DoD.pem.p7b
+
+Congrats, Firefox should be ready to use. You may have to restart Firefox before first use.
 
 If you have gotten this far and do not need Citrix Workspace installed, congrats. Otherwises, continue on.
 
 
 # DOD Certificates and Citrix Workspace Configuration
-For Citrix Workspace, I have found having a separate
+
+Please read all of this first, then go to the Instructions below:
+At the time of this writing (27APR2022), Citrix Workspace was not officially supported with Ubuntu 22.04, however I have found a workaround. Many users have complained about dependencies not being present when installing Citrix Workspace from the .deb file found here:
+
+https://www.citrix.com/downloads/workspace-app/linux/
+
+The dependency falls on libidn11 not being present in the current Ubuntu 22.04 repositories. The workaround is simple, download it from here:
+
+http://mirrors.kernel.org/ubuntu/pool/main/libi/libidn/libidn11_1.33-3_amd64.deb
+
+Then when installing Citrix Workspace it asks about AppArmor, however AppArmor in this version with Ubuntu 22.04 has issues (i.e. your system will completely LOCK UP and you won't be able to boot). I had the pleasure of two choices - fix my broken system and spend hours doing so, or fresh reinstall in 5 minutes. I, of course, chose the former (/sarcasm).
+
+### Instructions
+
+Download the libidn11 dependency and install:
+```
+wget http://mirrors.kernel.org/ubuntu/pool/main/libi/libidn/libidn11_1.33-3_amd64.deb
+sudo dpkg -i libidn11_1.33-3_amd64.deb
+```
+Afterwards download Citrix Workspace from here: 
+https://www.citrix.com/downloads/workspace-app/linux/
+
+In terminal, go to the folder where you downloaded the .deb file (time of this writing - icaclient_22.3.0.24_amd64.deb)
+```
+sudo dpkg -i icaclient_22.3.0.24_amd64.deb
+```
+
+When presented with the AppArmor screen select NO. Otherwise your system will present some fun errors. If you select yes you will have a fun hayride of a time and then your system will stop responding to terminal commands. At current time there is no fix under 22.04. This is the only workaround I have found.
+*Disclaimer: If you need AppArmor with Citrix Workspace, this workaround will NOT work for you. You will have to either look elsewhere OR for the time being run Citrix via Windows/OSx until Citrix updates their software to match Ubuntu 22.04*
+
+After the installation is finished, it's time to install the certificates needed to install certificates to Citrix Workspace to communicate to the DOD. 
+For Citrix Workspace, I have found having a separate set of individual certificates was a must (as we had to place them in the /opt/Citrix/ICAClient/keystore/cacerts). Download the certs from this website: https://militarycac.com/maccerts/AllCerts.zip
+
+Unzip the certificates and in your terminal go to the directory which you unzipped them. Then run the following command:
+```
+sudo cp *.cer /opt/Citrix/ICAClient/keystore/cacerts/.
+```
+This should import all of the certificates you will need to your Citrix Workspace client.
