@@ -224,6 +224,9 @@ Import the following certificates (from the folder you downloaded the above cert
 
 Congrats, Firefox should be ready to use. You may have to restart Firefox before first use.
 
+## Chrome
+Coming Soon
+
 If you have gotten this far and do not need Citrix Workspace installed, congrats. Otherwises, continue on.
 
 
@@ -266,3 +269,5 @@ Unzip the certificates and in your terminal go to the directory which you unzipp
 sudo cp *.cer /opt/Citrix/ICAClient/keystore/cacerts/.
 ```
 This should import all of the certificates you will need to your Citrix Workspace client.
+
+Hopefully this all helps for those with Ubuntu 22.04.
