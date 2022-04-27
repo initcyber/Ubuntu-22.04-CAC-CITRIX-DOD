@@ -1,4 +1,4 @@
-# Ubuntu-22.04-CAC-AVHE-DOD
+# Ubuntu-22.04-CAC-CITRIX-DOD
 Notes on DOD CAC Certifcate Installation and Walkthrough + AVHE for Ubuntu's latest 22.04 LTS Release (April 2022).
 
 Important: CoolKey/CACkey (pkcs11 management software) as most guides out there will advise you to use, isn't feasible with right out the box with Ubuntu 22.04. CoolKey doesn't play well with PIV certificates, and CACKey is only available after being authenticated with a ... CAC... Chicken and Egg problem... OpenSC is our only choice here. Chances are you have tried everything up to this point and are just now finding this GitHub Repo, so either start a fresh install or uninstall CACKey and CoolKey following the steps below:
@@ -145,9 +145,70 @@ Onto Certificates!
 
 # DOD Certificates and Browser Configuration
 
-Obtain the DOD Certificates here:
+Obtain the DOD Certificates here and unzip them:
+
+https://public.cyber.mil/pki-pke/pkipke-document-library/3
+
+or use the fancy wget command
+
+```
+wget https://dl.dod.cyber.mil/wp-content/uploads/pki-pke/zip/certificates_pkcs7_DoD.zip && unzip certificates_pkcs7_DoD.zip
+```
+## Firefox
+
+VERY Important!!!!: Firefox that comes with Ubuntu 22.04 is absolutely horrible (it comes default as a SNAP package). I installed Firefox ESR from their repository.
+
+```
+sudo add-apt-repository ppa:mozillateam/ppa
+sudo apt update -y
+```
+
+Then 
+
+```
+sudo snap remove firefox
+```
+
+After it finishes
+
+```
+sudo apt install firefox-esr
+```
+### Load the security device
+
+Now it's time to load the security device. I tried the automatic way using the terminal command below:
+
+```
+pkcs11-register
+```
+Then in Firefox (ESR)
+
+Navigate to your Taskbar (on top) -> Edit -> Settings
+Left column click on Privacy & Security 
+Scroll down to Certificates -> Security Devices. You should see an entry under Security Modules and Devices that states "OpenSC smartcard framework (0.xx)"
+
+If you do not then we have to do it the manual way... I had to.
+
+---
+
+The manual way:
+
+In Firefox (ESR)
+
+Navigate to your Taskbar (on top) -> Edit -> Settings
+Left column click on Privacy & Security 
+Scroll down to Certificates -> Security Devices. 
+
+On the left side click "Load"
+
+Module name: "OpenSC smartcard framework" (The name is really irrelevant, just an identifier, you could name it whatever)
+Module filename: '/usr/lib/x86_64-linux-gnu/pkcs11/onepin-opensc-pkcs11.so` or `/usr/lib/onepin-opensc-pkcs11.so`.
+
+### Load the DOD Certificates
+
 
 If you have gotten this far and do not need Citrix Workspace installed, congrats. Otherwises, continue on.
+
 
 # DOD Certificates and Citrix Workspace Configuration
 For Citrix Workspace, I have found having a separate
