@@ -97,7 +97,7 @@ modprobe -r pn533 nfc
 
 Now that the middleware is installed, type the following command
 ```
-opensc-tools -l
+opensc-tool -l
 ```
 in order to query information about your CAC and to see if OpenSC can communicate with the middleware we just installed. You should see something of the following (where the CAC reader is listed out)
 ```
